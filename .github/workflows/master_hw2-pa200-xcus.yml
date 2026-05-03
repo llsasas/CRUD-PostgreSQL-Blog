@@ -55,6 +55,7 @@ jobs:
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_EB7A3410ED254A98882F4FD693D25A74 }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_7FBD20E2F9DA4B37BB7D534791AF0143 }}
 
+
       - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
@@ -62,4 +63,8 @@ jobs:
           app-name: 'hw2-pa200-xcus'
           slot-name: 'Production'
           package: .
-          
+      - name: Upload CSS to Azure Storage
+        uses: azure/CLI@v1
+        with:
+          inlineScript: |
+             az storage blob upload-batch --account-name hw2storagepa200 --auth-mode key -d public -s ./public --connection-string "${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}" --overwrite
